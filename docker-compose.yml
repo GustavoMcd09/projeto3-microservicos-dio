@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mercado-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - backend
+
+  php-apache1:
+    image: mercado-php
+    depends_on:
+      - mysql
+    networks:
+      - backend
+
+  php-apache2:
+    image: mercado-php
+    depends_on:
+      - mysql
+    networks:
+      - backend
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php-apache1
+      - php-apache2
+    networks:
+      - backend
+
+volumes:
+  mysql_data:
+
+networks:
+  backend:
