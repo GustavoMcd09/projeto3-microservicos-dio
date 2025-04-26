@@ -1,0 +1,7 @@
+{
+    "name": "root/mercado",
+    "description": "Projeto de microserviços com PHP, MySQL, NGINX e Docker",
+    "require": {
+        "vlucas/phpdotenv": "^5.6"
+    }
+}
